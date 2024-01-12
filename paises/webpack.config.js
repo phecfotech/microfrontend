@@ -46,7 +46,9 @@ module.exports = (_, argv) => ({
       remotes: {
         home:"home@http://localhost:3000/remoteEntry.js"
       },
-      exposes: {},
+      exposes: {
+        "./PaisList":"./src/PaisList.jsx"
+      },
       shared: {
         ...deps,
         react: {
