@@ -7,6 +7,8 @@ import "./index.scss";
 import Header from "home/Header";
 import Footer from "home/Footer";
 import PaisList from "./PaisList";
+import CreateModal from "./CreateModal";
+
 
 const App = () => (
   <div className="mt-5 text-3xl mx-auto max-w-6xl">
@@ -14,9 +16,8 @@ const App = () => (
     <div className="my-5">
       <h1>Lista de paises</h1>
     </div>
-    <Button variant="contained" sx={{margin:'10px'}}>Crear</Button>
+    <CreateModal/>
     <PaisList/>
-    
     <Footer/>
   </div>
 );

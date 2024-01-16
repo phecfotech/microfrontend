@@ -1,50 +1,45 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { paises } from './data.js';
-import { TableCell, Table, TableContainer, TableHead, TableRow, TableBody, Paper, Button, styled, tableCellClasses} from '@mui/material';
+import { DataGrid} from '@mui/x-data-grid';
+import { Button } from '@mui/material';
+import EditModal from "./EditModal.jsx";
+import DeleteModal from './DeleteModal.jsx';
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}));
+const columns = [
+  { field: 'id', headerName: 'ID', width: 70 },
+  { field: 'name', headerName: 'Name', width: 200 },
+  { field: 'population', headerName: 'Population', width: 200 },
+  {field:'Edit', 
+  renderCell: (cellValue)=>{
+    return (<EditModal/>
+    )
+  }},
+  {field:'Delete',
+renderCell:(cellValue)=>{
+  return(
+    <DeleteModal/>
+  )
+
+}}
+  
+];
 
 export default function PaisList() {
+  
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{minWidth: 700}} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>Id</StyledTableCell>
-            <StyledTableCell>Pais</StyledTableCell>
-            <StyledTableCell>Cantidad de habitantes</StyledTableCell>
-            <StyledTableCell>Actions</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {paises.map((pais) =>(
-          <StyledTableRow key={pais.id}>
-            <StyledTableCell component="th" scope="row">{pais.id}</StyledTableCell>
-            <StyledTableCell aligh="right">{pais.name}</StyledTableCell>
-            <StyledTableCell aligh="right">{pais.population}</StyledTableCell>
-            <StyledTableCell align='right'><Button>Edit</Button><Button>Delete</Button></StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid
+        rows={paises}
+        columns={columns}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: 5 },
+          },
+        }}
+        pageSizeOptions={[5, 10]}
+        checkboxSelection
+      />
+    </div>
   );
-  }
+}

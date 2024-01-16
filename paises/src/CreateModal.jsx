@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { TextField } from '@mui/material';
 
-export default function EditModal() {
+export default function CreateModal() {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -19,8 +19,8 @@ export default function EditModal() {
 
   return (
     <React.Fragment>
-      <Button variant="outlined" onClick={handleClickOpen}>
-       EDIT
+      <Button variant="contained" sx={{margin:'10px'}} onClick={handleClickOpen}>
+       CREAR
       </Button>
       <Dialog
         open={open}
@@ -28,7 +28,7 @@ export default function EditModal() {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-         <DialogTitle id="alert-dialog-title">Editar</DialogTitle>
+         <DialogTitle id="alert-dialog-title">Crear</DialogTitle>
         <DialogContent>
             <div className='Content' sx={{'&.MuiTextField-root':{m:1, width:'25ch'},}}
             noValidate
