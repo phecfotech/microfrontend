@@ -30,7 +30,7 @@ export default function DeleteModal() {
     setAlertOpen(false);
   };
 
-  const createPost = async () => {
+  const handleRemove = async () => {
     try {
       const response = await axios.delete(baseURL/`${pais.id}`);
 
@@ -48,7 +48,7 @@ export default function DeleteModal() {
   return (
     <React.Fragment>
       <Button variant="contained" sx={{ margin: '10px' }} onClick={handleClickOpen}>
-        CREAR
+        DELETE
       </Button>
       <Dialog
         open={open}
@@ -56,7 +56,7 @@ export default function DeleteModal() {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Crear</DialogTitle>
+        <DialogTitle id="alert-dialog-title">Borrar</DialogTitle>
         <DialogContent>
           <div
             className="Content"
@@ -79,7 +79,7 @@ export default function DeleteModal() {
           <Button onClick={handleClose}>Cancelar</Button>
           <Button
             onClick={() => {
-              createPost();
+              handleRemove();
               setAlertOpen(true);
             }}
             autoFocus
