@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
-import { paises } from './data.js';
+import React, { useEffect, useState } from 'react'
 import { DataGrid} from '@mui/x-data-grid';
-import { Button } from '@mui/material';
 import EditModal from "./EditModal.jsx";
 import DeleteModal from './DeleteModal.jsx';
-
+import axios from 'axios';
+import { baseURL } from './config.js';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
@@ -14,22 +13,27 @@ const columns = [
   renderCell: (cellValue)=>{
     return (<EditModal/>
     )
-  }},
+  }}, 
   {field:'Delete',
 renderCell:(cellValue)=>{
   return(
     <DeleteModal/>
   )
-
 }}
-  
 ];
 
 export default function PaisList() {
+  const [paises, setPaises] = useState('');
+
+  useEffect(() => {
+    axios.get(baseURL).then((response) =>{
+      setPaises(response.data);
+    })
+  },[]);
   
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
+      <DataGrid getRowId={(row) => row.id}
         rows={paises}
         columns={columns}
         initialState={{
