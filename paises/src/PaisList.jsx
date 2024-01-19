@@ -11,13 +11,13 @@ const columns = [
   { field: 'population', headerName: 'Population', width: 200 },
   {field:'Edit', 
   renderCell: (cellValue)=>{
-    return (<EditModal/>
+    return (<EditModal pais={cellValue.row}/>
     )
   }}, 
   {field:'Delete',
 renderCell:(cellValue)=>{
   return(
-    <DeleteModal/>
+    <DeleteModal paisId={cellValue.row.id}/>
   )
 }}
 ];

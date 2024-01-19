@@ -4,16 +4,15 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { TextField, Alert, Snackbar } from '@mui/material';
+import { Alert, Snackbar } from '@mui/material';
 import { baseURL } from './config';
 import axios from 'axios';
 import { useState } from 'react';
 
-export default function DeleteModal() {
+export default function DeleteModal({ paisId }) {
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [population, setPopulation] = useState('');
   const [alertOpen, setAlertOpen] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -21,6 +20,7 @@ export default function DeleteModal() {
 
   const handleClose = () => {
     setOpen(false);
+    setDeleteError(null); // Reset delete error on close
   };
 
   const handleCloseAlert = (reason) => {
@@ -30,18 +30,20 @@ export default function DeleteModal() {
     setAlertOpen(false);
   };
 
-  const handleRemove = async () => {
+  const deletePost = async () => {
     try {
-      const response = await axios.delete(baseURL/`${pais.id}`);
+      const response = await axios.delete(`${baseURL}/${paisId}`);
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         setAlertOpen(true);
         setOpen(false);
       } else {
-        console.error('Error creating post. Status:', response.status);
+        console.error('Error deleting item. Status:', response.status);
+        setDeleteError(`Error deleting item. Status: ${response.status}`);
       }
     } catch (error) {
-      console.error('Error creating post:', error);
+      console.error('Error deleting:', error);
+      setDeleteError(`Error deleting item: ${error.message}`);
     }
   };
 
@@ -58,29 +60,16 @@ export default function DeleteModal() {
       >
         <DialogTitle id="alert-dialog-title">Borrar</DialogTitle>
         <DialogContent>
-          <div
-            className="Content"
-            sx={{ '&.MuiTextField-root': { m: 1, width: '25ch' } }}
-            noValidate
-            autoComplete="off"
-          >
-            <TextField id="standard-basic" value={name} onChange={(e) => setName(e.target.value)} sx={{ margin: '15px' }} label="Name" variant="standard" />
-            <TextField
-              id="standard-basic"
-              value={population}
-              onChange={(e) => setPopulation(e.target.value)}
-              sx={{ margin: '15px' }}
-              label="Population"
-              variant="standard"
-            />
+          <div className="Content" sx={{ '&.MuiTextField-root': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
+            <h2>¿Estás seguro de eliminar este item?</h2>
           </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancelar</Button>
           <Button
             onClick={() => {
-              handleRemove();
-              setAlertOpen(true);
+              deletePost();
+              setAlertOpen(!deleteError); // Show success alert only if there's no delete error
             }}
             autoFocus
           >
@@ -89,8 +78,8 @@ export default function DeleteModal() {
         </DialogActions>
       </Dialog>
       <Snackbar anchorOrigin={{ vertical:'top', horizontal:'center' }} open={alertOpen} autoHideDuration={3000} onClose={handleCloseAlert}>
-        <Alert onClose={handleCloseAlert} severity="success">
-          This is a success message!
+        <Alert onClose={handleCloseAlert} severity={deleteError ? 'error' : 'success'}>
+          {deleteError ? deleteError : 'El item se eliminó exitosamente.'}
         </Alert>
       </Snackbar>
     </React.Fragment>
