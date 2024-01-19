@@ -4,6 +4,9 @@ import EditModal from "./EditModal.jsx";
 import DeleteModal from './DeleteModal.jsx';
 import axios from 'axios';
 import { baseURL } from './config.js';
+import{Tooltip} from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
@@ -19,8 +22,20 @@ renderCell:(cellValue)=>{
   return(
     <DeleteModal paisId={cellValue.row.id}/>
   )
-}}
-];
+}},
+{field: 'Module',
+renderCell: (cellValue) => {
+  const switchState = cellValue.switchState;
+  return (
+    <Tooltip title='Testing'>
+      {switchState ? (
+        <VisibilityIcon color='primary' />
+      ) : (
+        <VisibilityOffIcon color='primary'/>
+      )}
+    </Tooltip>
+  );
+}}];
 
 export default function PaisList() {
   const [paises, setPaises] = useState('');

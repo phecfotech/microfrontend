@@ -1,10 +1,5 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import { Alert, Snackbar } from '@mui/material';
+import { Alert, Snackbar, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { baseURL } from './config';
 import axios from 'axios';
 import { useState } from 'react';
@@ -20,7 +15,6 @@ export default function DeleteModal({ paisId }) {
 
   const handleClose = () => {
     setOpen(false);
-    setDeleteError(null); // Reset delete error on close
   };
 
   const handleCloseAlert = (reason) => {
@@ -69,7 +63,7 @@ export default function DeleteModal({ paisId }) {
           <Button
             onClick={() => {
               deletePost();
-              setAlertOpen(!deleteError); // Show success alert only if there's no delete error
+              setAlertOpen(true);
             }}
             autoFocus
           >
@@ -78,8 +72,8 @@ export default function DeleteModal({ paisId }) {
         </DialogActions>
       </Dialog>
       <Snackbar anchorOrigin={{ vertical:'top', horizontal:'center' }} open={alertOpen} autoHideDuration={3000} onClose={handleCloseAlert}>
-        <Alert onClose={handleCloseAlert} severity={deleteError ? 'error' : 'success'}>
-          {deleteError ? deleteError : 'El item se eliminó exitosamente.'}
+        <Alert onClose={handleCloseAlert} severity='success'>
+          El item se eliminó exitosamente!
         </Alert>
       </Snackbar>
     </React.Fragment>

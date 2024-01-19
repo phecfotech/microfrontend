@@ -4,11 +4,11 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { TextField } from '@mui/material';
+import { TextField, Snackbar, Alert } from '@mui/material';
 import axios from 'axios';
 import { baseURL } from './config';
 
-export default function EditModal({ pais, onEditSuccess }) {
+export default function EditModal({ pais }) {
   const [open, setOpen] = React.useState(false);
   const [editedName, setEditedName] = React.useState('');
   const [editedPopulation, setEditedPopulation] = React.useState('');
@@ -16,7 +16,6 @@ export default function EditModal({ pais, onEditSuccess }) {
 
   const handleClickOpen = () => {
     setOpen(true);
-    // Initialize the fields with the current data
     setEditedName(pais.name);
     setEditedPopulation(pais.population);
   };
@@ -39,9 +38,6 @@ export default function EditModal({ pais, onEditSuccess }) {
       if (response.status === 200) {
         setAlertOpen(true);
         setOpen(false);
-        if (onEditSuccess) {
-          onEditSuccess(response.data); // Pass the edited data to the parent component
-        }
       } else {
         console.error('Error editing item. Status:', response.status);
       }
@@ -84,11 +80,21 @@ export default function EditModal({ pais, onEditSuccess }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancelar</Button>
-          <Button onClick={handleEdit} autoFocus>
+          <Button onClick={() => {
+            handleEdit();
+            setAlertOpen(true);
+            }}  
+            autoFocus
+            >
             Aceptar
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar anchorOrigin={{ vertical:'top', horizontal:'center' }} open={alertOpen} autoHideDuration={3000} onClose={handleCloseAlert}>
+        <Alert onClose={handleCloseAlert} severity='success'>
+        El item se editó exitosamente!
+        </Alert>
+      </Snackbar>
     </React.Fragment>
   );
 }

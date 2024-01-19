@@ -1,10 +1,6 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import { TextField, Alert, Snackbar } from '@mui/material';
+import { TextField, Alert, Snackbar, FormControlLabel, Switch, FormGroup, FormControl, FormLabel,
+Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { baseURL } from './config';
 import axios from 'axios';
 import { useState } from 'react';
@@ -14,6 +10,18 @@ export default function CreateModal() {
   const [name, setName] = useState('');
   const [population, setPopulation] = useState('');
   const [alertOpen, setAlertOpen] = useState(false);
+  const [switchState, setSwitchState] =useState({
+    importador: false,
+    exportador: false, 
+    GDP: false,
+  });
+
+  const handleSwitch =(event) =>{
+    setSwitchState({
+    ...switchState, 
+    [event.target.name]:event.target.checked,
+    })
+  }
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -34,7 +42,8 @@ export default function CreateModal() {
     try {
       const response = await axios.post(baseURL, {
         name: name,
-        population: population
+        population: population,
+        modules: switchState,
       });
 
       if (response.status === 201) {
@@ -76,6 +85,29 @@ export default function CreateModal() {
               label="Population"
               variant="standard"
             />
+            <FormControl component="fieldset" variant="standard">
+      <FormLabel component="legend">Modulo</FormLabel>
+      <FormGroup>
+        <FormControlLabel
+          control={
+            <Switch checked={switchState.importador} onChange={handleSwitch} name="importador" />
+          }
+          label="Importador"
+        />
+        <FormControlLabel
+          control={
+            <Switch checked={switchState.exportador} onChange={handleSwitch} name="exportador" />
+          }
+          label="Exportador"
+        />
+        <FormControlLabel
+          control={
+            <Switch checked={switchState.GDP} onChange={handleSwitch} name="GDP" />
+          }
+          label="GDP"
+        />
+      </FormGroup>
+    </FormControl>
           </div>
         </DialogContent>
         <DialogActions>
@@ -83,7 +115,7 @@ export default function CreateModal() {
           <Button
             onClick={() => {
               createPost();
-              setAlertOpen(true);
+              setSwitchState()
             }}
             autoFocus
           >
@@ -92,8 +124,8 @@ export default function CreateModal() {
         </DialogActions>
       </Dialog>
       <Snackbar anchorOrigin={{ vertical:'top', horizontal:'center' }} open={alertOpen} autoHideDuration={3000} onClose={handleCloseAlert}>
-        <Alert onClose={handleCloseAlert} severity="success">
-          This is a success message!
+        <Alert onClose={handleCloseAlert} severity='success'>
+        El item se creó exitosamente!
         </Alert>
       </Snackbar>
     </React.Fragment>
