@@ -10,15 +10,15 @@ export default function CreateModal() {
   const [name, setName] = useState('');
   const [population, setPopulation] = useState('');
   const [alertOpen, setAlertOpen] = useState(false);
-  const [switchState, setSwitchState] =useState({
+  const [module, setModule] =useState({
     importador: false,
     exportador: false, 
     GDP: false,
   });
-
+ 
   const handleSwitch =(event) =>{
-    setSwitchState({
-    ...switchState, 
+    setModule({
+    ...module, 
     [event.target.name]:event.target.checked,
     })
   }
@@ -43,7 +43,7 @@ export default function CreateModal() {
       const response = await axios.post(baseURL, {
         name: name,
         population: population,
-        modules: switchState,
+        module: module,
       });
 
       if (response.status === 201) {
@@ -90,19 +90,19 @@ export default function CreateModal() {
       <FormGroup>
         <FormControlLabel
           control={
-            <Switch checked={switchState.importador} onChange={handleSwitch} name="importador" />
+            <Switch checked={module.importador} onChange={handleSwitch} name="importador" />
           }
           label="Importador"
         />
         <FormControlLabel
           control={
-            <Switch checked={switchState.exportador} onChange={handleSwitch} name="exportador" />
+            <Switch checked={module.exportador} onChange={handleSwitch} name="exportador" />
           }
           label="Exportador"
         />
         <FormControlLabel
           control={
-            <Switch checked={switchState.GDP} onChange={handleSwitch} name="GDP" />
+            <Switch checked={module.GDP} onChange={handleSwitch} name="GDP" />
           }
           label="GDP"
         />
@@ -115,7 +115,7 @@ export default function CreateModal() {
           <Button
             onClick={() => {
               createPost();
-              setSwitchState()
+              setModule()
             }}
             autoFocus
           >

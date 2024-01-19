@@ -6,14 +6,14 @@ import Footer from "home/Footer";
 import PaisList from "./PaisList";
 import CreateModal from "./CreateModal";
 
-const App = () => (
+const App = () =>(
   <div className="mt-5 text-3xl mx-auto max-w-6xl">
     <Header/>
     <div className="my-5">
       <h1>Lista de paises</h1>
     </div>
     <CreateModal/>
-    <PaisList/>
+    <PaisList />
     <Footer/>
   </div>
 );

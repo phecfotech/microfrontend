@@ -12,32 +12,36 @@ const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
   { field: 'name', headerName: 'Name', width: 200 },
   { field: 'population', headerName: 'Population', width: 200 },
-  {field:'Edit', 
+  { field:'Edit', 
   renderCell: (cellValue)=>{
     return (<EditModal pais={cellValue.row}/>
     )
   }}, 
   {field:'Delete',
-renderCell:(cellValue)=>{
+  renderCell:(cellValue)=>{
   return(
     <DeleteModal paisId={cellValue.row.id}/>
   )
 }},
-{field: 'Module',
-renderCell: (cellValue) => {
-  const switchState = cellValue.switchState;
-  return (
-    <Tooltip title='Testing'>
-      {switchState ? (
-        <VisibilityIcon color='primary' />
+{
+  field: 'module',
+  renderCell: (cellValue) => {
+    const hasModules = cellValue.row.module.length > 0;
+    return (
+      hasModules ? (
+        <Tooltip title={cellValue.module}>
+          <VisibilityIcon color='primary' />
+        </Tooltip>
       ) : (
-        <VisibilityOffIcon color='primary'/>
-      )}
-    </Tooltip>
-  );
-}}];
+        <Tooltip title='Sin Módulos Habilitados'>
+          <VisibilityOffIcon color='primary' />
+        </Tooltip>
+      )
+    );
+  }
+}];
 
-export default function PaisList() {
+export default function PaisList({switchState}) {
   const [paises, setPaises] = useState('');
 
   useEffect(() => {
