@@ -23,25 +23,35 @@ const columns = [
     <DeleteModal paisId={cellValue.row.id}/>
   )
 }},
-{
-  field: 'module',
-  renderCell: (cellValue) => {
-    const hasModules = cellValue.row.module.length > 0;
-    return (
-      hasModules ? (
-        <Tooltip title={cellValue.module}>
-          <VisibilityIcon color='primary' />
-        </Tooltip>
-      ) : (
-        <Tooltip title='Sin Módulos Habilitados'>
-          <VisibilityOffIcon color='primary' />
-        </Tooltip>
-      )
-    );
-  }
-}];
+  {
+    field: 'module',
+    renderCell: (cellValue) => {
+      const selectedModules = cellValue.row.module;
+      const hasModules = Object.values(selectedModules).some((value) => value);
 
-export default function PaisList({switchState}) {
+      let icon;
+      let tooltipTitle;
+
+      if (hasModules) {
+        icon = <VisibilityIcon color='primary' />;
+        tooltipTitle = `Módulos Habilitados: ${Object.keys(selectedModules)
+          .filter((key) => selectedModules[key])
+          .join(', ')}`;
+      } else {
+        icon = <VisibilityOffIcon color='primary' />;
+        tooltipTitle = 'Sin Módulos Habilitados';
+      }
+
+      return (
+        <Tooltip title={tooltipTitle}>
+          <div>{icon}</div>
+        </Tooltip>
+      );
+    },
+  },
+];
+
+export default function PaisList() {
   const [paises, setPaises] = useState('');
 
   useEffect(() => {

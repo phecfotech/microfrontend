@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { TextField, Alert, Snackbar, FormControlLabel, Switch, FormGroup, FormControl, FormLabel,
-Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import {
+  TextField,Alert,Snackbar,FormControlLabel,Switch,FormGroup,FormControl,
+  FormLabel,Button,Dialog,DialogActions,DialogContent,DialogTitle,
+} from '@mui/material';
 import { baseURL } from './config';
 import axios from 'axios';
 import { useState } from 'react';
@@ -10,18 +12,11 @@ export default function CreateModal() {
   const [name, setName] = useState('');
   const [population, setPopulation] = useState('');
   const [alertOpen, setAlertOpen] = useState(false);
-  const [module, setModule] =useState({
+  const [modules, setModules] = useState({
     importador: false,
-    exportador: false, 
+    exportador: false,
     GDP: false,
   });
- 
-  const handleSwitch =(event) =>{
-    setModule({
-    ...module, 
-    [event.target.name]:event.target.checked,
-    })
-  }
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -43,7 +38,11 @@ export default function CreateModal() {
       const response = await axios.post(baseURL, {
         name: name,
         population: population,
-        module: module,
+        module: {
+          importador: modules.importador,
+          exportador: modules.exportador,
+          GDP: modules.GDP,
+        },
       });
 
       if (response.status === 201) {
@@ -55,6 +54,13 @@ export default function CreateModal() {
     } catch (error) {
       console.error('Error creating post:', error);
     }
+  };
+
+  const handleSwitch = (moduleName) => {
+    setModules((prevModules) => ({
+      ...prevModules,
+      [moduleName]: !prevModules[moduleName],
+    }));
   };
 
   return (
@@ -70,13 +76,15 @@ export default function CreateModal() {
       >
         <DialogTitle id="alert-dialog-title">Crear</DialogTitle>
         <DialogContent>
-          <div
-            className="Content"
-            sx={{ '&.MuiTextField-root': { m: 1, width: '25ch' } }}
-            noValidate
-            autoComplete="off"
-          >
-            <TextField id="standard-basic" value={name} onChange={(e) => setName(e.target.value)} sx={{ margin: '15px' }} label="Name" variant="standard" />
+          <div className="Content" noValidate autoComplete="off">
+            <TextField
+              id="standard-basic"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              sx={{ margin: '15px' }}
+              label="Name"
+              variant="standard"
+            />
             <TextField
               id="standard-basic"
               value={population}
@@ -86,46 +94,34 @@ export default function CreateModal() {
               variant="standard"
             />
             <FormControl component="fieldset" variant="standard">
-      <FormLabel component="legend">Modulo</FormLabel>
-      <FormGroup>
-        <FormControlLabel
-          control={
-            <Switch checked={module.importador} onChange={handleSwitch} name="importador" />
-          }
-          label="Importador"
-        />
-        <FormControlLabel
-          control={
-            <Switch checked={module.exportador} onChange={handleSwitch} name="exportador" />
-          }
-          label="Exportador"
-        />
-        <FormControlLabel
-          control={
-            <Switch checked={module.GDP} onChange={handleSwitch} name="GDP" />
-          }
-          label="GDP"
-        />
-      </FormGroup>
-    </FormControl>
+              <FormLabel component="legend">Modulo</FormLabel>
+              <FormGroup>
+                <FormControlLabel
+                  control={<Switch checked={modules.importador} onChange={() => handleSwitch('importador')} />}
+                  label="Importador"
+                />
+                <FormControlLabel
+                  control={<Switch checked={modules.exportador} onChange={() => handleSwitch('exportador')} />}
+                  label="Exportador"
+                />
+                <FormControlLabel
+                  control={<Switch checked={modules.GDP} onChange={() => handleSwitch('GDP')} />}
+                  label="GDP"
+                />
+              </FormGroup>
+            </FormControl>
           </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancelar</Button>
-          <Button
-            onClick={() => {
-              createPost();
-              setModule()
-            }}
-            autoFocus
-          >
+          <Button onClick={createPost} autoFocus>
             Aceptar
           </Button>
         </DialogActions>
       </Dialog>
-      <Snackbar anchorOrigin={{ vertical:'top', horizontal:'center' }} open={alertOpen} autoHideDuration={3000} onClose={handleCloseAlert}>
-        <Alert onClose={handleCloseAlert} severity='success'>
-        El item se creó exitosamente!
+      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={alertOpen} autoHideDuration={3000} onClose={handleCloseAlert}>
+        <Alert onClose={handleCloseAlert} severity="success">
+          El item se creó exitosamente!
         </Alert>
       </Snackbar>
     </React.Fragment>
